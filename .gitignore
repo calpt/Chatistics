@@ -1,6 +1,9 @@
 # Personal experiments
 experiments.py
 
+# VSCode
+.vscode/
+
 # IDE
 .idea/
 *.iml

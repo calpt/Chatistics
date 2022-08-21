@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 def main(own_name, file_path, max_exported_messages):
     global MAX_EXPORTED_MESSAGES
     MAX_EXPORTED_MESSAGES = max_exported_messages
-    log.info('Parsing Google Hangouts data...')
+    log.info('Parsing Telegram data...')
     if not os.path.isfile(file_path):
         log.error(f'No input file under {file_path}')
         exit(0)

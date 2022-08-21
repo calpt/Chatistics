@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 def render_barplot(df, args):
     # create figure
     sns.set()
+    sns.set_palette('tab20')
     fig, ax = plt.subplots(1, 1, figsize=(20, 10))
     df['timestamp'] = pd.to_datetime(df.timestamp, unit='s')
     df['count'] = 0
@@ -44,6 +45,7 @@ def render_barplot(df, args):
 
 def render_density(df, args):
     sns.set()
+    sns.set_palette('tab20')
     fig, ax = plt.subplots(1, 1, figsize=(20, 10))
     df['timestamp'] = pd.to_datetime(df.timestamp, unit='s')
     df['timestamp'] = df.timestamp.apply(lambda s: mdates.date2num(s))

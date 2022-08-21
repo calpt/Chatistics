@@ -3,6 +3,7 @@ import logging
 from parsers.config import config
 import pandas as pd
 import argparse
+from datetime import datetime
 
 log = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ def add_load_data_args(parser):
     """Adds common data loader arguments to arg parser"""
     platforms = ['telegram_api', 'telegram_json', 'whatsapp', 'messenger', 'hangouts']
     parser.add_argument('-p', '--platforms', default=platforms, choices=platforms, nargs='+', help='Use data only from certain platforms')
+    parser.add_argument('--start-date', default=None, help='Only use messages after this date (format: YYYY-MM-DD)')
     parser.add_argument('--filter-conversation', dest='filter_conversation', nargs='+', default=[], help='Limit by conversations with this person/group')
     parser.add_argument('--filter-sender', dest='filter_sender', nargs='+', default=[], help='Limit by messages by this sender')
     parser.add_argument('--remove-conversation', dest='remove_conversation', nargs='+', default=[], help='Remove messages by these senders/groups')
@@ -48,6 +50,8 @@ def load_data(args):
     df = pd.concat(df, axis=0, ignore_index=True)
     original_len = len(df)
     # filtering
+    if args.start_date:
+        df = df[df.timestamp >= datetime.strptime(args.start_date, "%Y-%m-%d").timestamp()]
     if len(args.filter_conversation) > 0:
         log.info('Filtering by conversation(s) with {}'.format(', '.join(args.filter_conversation)))
         df = df[df['conversationWithName'].isin(args.filter_conversation)]
