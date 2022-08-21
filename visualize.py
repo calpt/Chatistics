@@ -31,9 +31,11 @@ class ArgParse():
         parser = ArgParseDefault(description='Visualize breakdown of messages')
         parser = add_load_data_args(parser)
         parser.add_argument('--as-density', dest='as_density', action='store_true', help='Plots individual densities instead of stacked histograms')
+        parser.add_argument('--by-words', dest='by_words', action='store_true', help='Plots by number of words instead of number of messages')
         parser.add_argument('-n', '--top-n', dest='top_n', type=int, default=10, help='Only consider the top n conversation partners (by number of messages)')
         parser.add_argument('-b', '--bin-size', dest='bin_size', type=str, default='1M',
                             help='Bin sizes (use the pandas Timedelta abbreviations of the form <number><type> where type can be ‘Y’, ‘M’, ‘W’, ‘D’, ‘days’, ‘day’, ‘hours’, hour’, ‘hr’, ‘h’, ‘m’, ‘minute’, ‘min’, ‘minutes’, ‘T’, ‘S’, ‘seconds’, ‘sec’, ‘second’, ‘ms’, ‘milliseconds’, ‘millisecond’, ‘milli’, ‘millis’, ‘L’, ‘us’, ‘microseconds’, ‘microsecond’, ‘micro’, ‘micros’, ‘U’, ‘ns’, ‘nanoseconds’, ‘nano’, ‘nanos’, ‘nanosecond’, ‘N’).')
+        parser.add_argument('--include-others', dest='include_others', action='store_true', help='Include the "others" category in the plot')
         args = parser.parse_args(sys.argv[2:])
         main(args)
 

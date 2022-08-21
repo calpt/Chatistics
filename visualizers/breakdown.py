@@ -21,14 +21,20 @@ def render_barplot(df, args):
     df['timestamp'] = pd.to_datetime(df.timestamp, unit='s')
     df['count'] = 0
     df = df.set_index('timestamp')
-    df = df.groupby('conversationWithName').resample(args.bin_size).count()['count']
+    if args.by_words:
+        df['word_count'] = df['text'].apply(lambda s: len(s.split()))
+        df = df.groupby('conversationWithName').resample(args.bin_size).sum()['word_count']
+        y_metric = 'Words'
+    else:
+        df = df.groupby('conversationWithName').resample(args.bin_size).count()['count']
+        y_metric = 'Messages'
     df = df.unstack(fill_value=0).T
     df = df.reset_index()
     df = df.set_index('timestamp')
     df.plot(kind='bar', stacked=True, ax=ax)
     # Axis labels
     ax.set_xlabel('')
-    ax.set_ylabel('Messages per month')
+    ax.set_ylabel(f'{y_metric} per {args.bin_size}')
     # Legend
     ax.legend(loc='center left', bbox_to_anchor=(1, .5))
     # Make most of the ticklabels empty so the labels don't get too crowded

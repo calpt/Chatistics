@@ -79,12 +79,19 @@ def load_data(args):
         df = df[df['text'].str.contains('|'.join(args.contains_keyword))]
     if 'top_n' in args:
         # find top_n interlocutors
-        top_interlocutors = df.conversationWithName.value_counts()
+        if 'by_words' in args and args.by_words and not args.as_density:
+            df['word_count'] = df['text'].apply(lambda s: len(s.split()))
+            top_interlocutors = df.groupby('conversationWithName')['word_count'].sum().sort_values(ascending=False)
+        else:
+            top_interlocutors = df.conversationWithName.value_counts()
         if len(top_interlocutors) <= args.top_n:
             log.info(f'Tried to filter by top {args.top_n:,} but only {len(top_interlocutors):,} conversations present in data')
         else:
             log.info(f'Filtering top {args.top_n:,} conversations from a total of {len(top_interlocutors):,} conversations')
-            df = df[df['conversationWithName'].isin(top_interlocutors.iloc[:args.top_n].index)]
+            if args.include_others:
+                df.loc[~df['conversationWithName'].isin(top_interlocutors.iloc[:args.top_n].index), 'conversationWithName'] = 'others'
+            else:
+                df = df[df['conversationWithName'].isin(top_interlocutors.iloc[:args.top_n].index)]
     if len(df) > 0:
         log.info(f'Loaded a total of {len(df):,} messages ({original_len - len(df):,} removed by filters)')
     else:
