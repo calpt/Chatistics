@@ -46,7 +46,7 @@ def render_barplot(df, args):
     ax.xaxis.set_major_formatter(ticker.FixedFormatter(ticklabels))
     plt.gcf().autofmt_xdate()
     plt.tight_layout()
-    save_fig(fig, 'breakdown')
+    return fig
 
 
 def render_density(df, args):
@@ -64,12 +64,14 @@ def render_density(df, args):
     ax.xaxis.set_major_locator(mdates.YearLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
     plt.tight_layout()
-    save_fig(fig, 'density')
+    return fig
 
 
 def main(args):
     df = load_data(args)
     if args.as_density:
-        render_density(df, args)
+        fig = render_density(df, args)
+        save_fig(fig, 'breakdown')
     else:
-        render_barplot(df, args)
+        fig = render_barplot(df, args)
+        save_fig(fig, 'density')

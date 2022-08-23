@@ -69,7 +69,7 @@ def parse_messages(archive, own_id):
                     log.error(f"No senderName could be found for senderId ({sender_id})")
 
                 # saves the message
-                outgoing = sender_id == own_id
+                outgoing = int(sender_id.replace("user", "")) == own_id
                 data += [[timestamp, conversation_with_id, conversation_with_name, sender_name, outgoing, text, '', '']]
 
                 if len(data) >= MAX_EXPORTED_MESSAGES:
