@@ -13,3 +13,4 @@ dependencies:
   - wordcloud==1.6.0
   - pip:
       - telethon==1.10.9
+      - ipykernel==5.5.6
