@@ -48,6 +48,7 @@ class ArgParse():
                             help='Path to stopword files (JSON format)')
         parser.add_argument('-n', '--num-words', dest='num_words', type=int, default=10000, help='Print up to n words into the cloud')
         parser.add_argument('--density', '--dpi', dest='dpi', type=int, default=300, help='Rendered image DPI')
+        parser.add_argument('--split-by-outgoing', dest='split_by_outgoing', action='store_true', help='Split by outgoing vs. incoming messages')
         args = parser.parse_args(sys.argv[2:])
         main(args)
 

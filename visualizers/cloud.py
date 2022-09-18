@@ -19,10 +19,25 @@ def main(args):
     df = load_data(args)
     # load stopwords
     stopwords = get_stopwords(args.stopword_paths)
-    # clean up data
-    text = cleanup_text(df['text'], stopwords)
-    # render word cloud
-    render_wordcloud(args, text)
+    if args.split_by_outgoing:
+        # outgoing
+        plt.subplot(121)
+        plt.title('Outgoing')
+        text_out = cleanup_text(df[df.outgoing == True]['text'], stopwords)
+        render_wordcloud(args, text_out)
+        # incoming
+        plt.subplot(122)
+        plt.title('Incoming')
+        text_in = cleanup_text(df[df.outgoing == False]['text'], stopwords)
+        render_wordcloud(args, text_in)
+    else:
+        # clean up data
+        text = cleanup_text(df['text'], stopwords)
+        # render word cloud
+        render_wordcloud(args, text)
+    # save fig
+    plt.tight_layout()
+    save_fig(plt.gcf(), 'cloud', dpi=args.dpi)
 
 
 def render_wordcloud(args, text):
@@ -33,8 +48,6 @@ def render_wordcloud(args, text):
     wc = wc.recolor(color_func=image_colors)
     plt.imshow(wc)
     plt.axis("off")
-    # save fig
-    save_fig(plt.gcf(), 'cloud', dpi=args.dpi)
 
 
 def cleanup_text(text, stopwords):
