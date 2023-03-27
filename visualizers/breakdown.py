@@ -23,7 +23,7 @@ def render_barplot(df, args):
     df = df.set_index('timestamp')
     if args.by_words:
         df['word_count'] = df['text'].apply(lambda s: len(s.split()))
-        df = df.groupby('conversationWithName').resample(args.bin_size).sum()['word_count']
+        df = df.groupby('conversationWithName').resample(args.bin_size).sum(numeric_only=True)['word_count']
         y_metric = 'Words'
     else:
         df = df.groupby('conversationWithName').resample(args.bin_size).count()['count']
